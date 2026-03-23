@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #faf8f5;
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #f0ebe4;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 0.25rem;
+        }
+
+        header p {
+            color: #a8896c;
+            font-size: 0.9rem;
+        }
+
+        /* Add Note Form */
+        .add-form {
+            background: white;
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #f0ebe4;
+        }
+
+        .add-form h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #78716c;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid #e7e0d8;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: #1e293b;
+            background: #faf8f5;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #d97706;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #b45309, #d97706);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Notes Section */
+        .notes-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .notes-header h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #44403c;
+        }
+
+        .notes-count {
+            font-size: 0.8rem;
+            color: #a8a29e;
+            font-weight: 500;
+        }
+
+        .note-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            border: 1px solid #f0ebe4;
+            transition: box-shadow 0.2s;
+        }
+
+        .note-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .note-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #292524;
+            margin-bottom: 0.4rem;
+        }
+
+        .note-card p {
+            color: #57534e;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.6rem;
+        }
+
+        .note-time {
+            font-size: 0.78rem;
+            color: #a8a29e;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #a8a29e;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .empty-state .hint {
+            font-size: 0.85rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f0ebe4;
+            color: #a8a29e;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 1rem; }
+            header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{ app_name }}</h1>
+            <p>A simple note-taking app, containerized with Docker</p>
+        </header>
+
+        <form class="add-form" action="/add" method="post">
+            <h2>New Note</h2>
+            <input class="form-input" type="text" name="title" placeholder="Note title..." required>
+            <textarea class="form-input" name="content" placeholder="What's on your mind?" rows="4" required></textarea>
+            <button class="submit-btn" type="submit">Save Note</button>
+        </form>
+
+        <div class="notes-header">
+            <h2>Your Notes</h2>
+            <span class="notes-count">{{ notes|length }} note{{ 's' if notes|length != 1 }}</span>
+        </div>
+
+        {% if notes %}
+            {% for note in notes|reverse %}
+            <div class="note-card">
+                <h3>{{ note.title }}</h3>
+                <p>{{ note.content }}</p>
+                <div class="note-time">{{ note.created_at }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <p>No notes yet</p>
+            <p class="hint">Add your first note above to get started!</p>
+        </div>
+        {% endif %}
+
+        <footer>
+            <p>Docker Notes App &middot; Built for learning Docker</p>
+        </footer>
+    </div>
+</body>
+</html>
